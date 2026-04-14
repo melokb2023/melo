@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     // 1. Show the forms
-    public function showRegister() { return view('auth.register'); }
-    public function showLogin() { return view('auth.login'); }
+    public function showRegister() { return view('register'); }
+    public function showLogin() { return view('login'); }
 
     // 2. Handle Manual Registration with Bcrypt
     public function register(Request $request) 
