@@ -38,4 +38,8 @@ class User extends Authenticatable
             'password' => 'hashed', // Laravel 11 handles the Bcrypt/Argon2 verification logic here
         ];
     }
+    public function tasks()
+{
+    return $this->hasMany(Task::class);
+}
 }
