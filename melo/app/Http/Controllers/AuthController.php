@@ -35,21 +35,23 @@ class AuthController extends Controller
 
     // 3. Handle Secure Login & Session Management
     public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        if (Auth::attempt($credentials)) {
-            // Success! Regenerate session to prevent "Session Fixation" attacks
-            $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
-        }
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
 
-        return back()->withErrors(['email' => 'Invalid credentials.']);
+        // This forces the redirect to your tasks page
+        return redirect()->intended('/tasks');
     }
 
+    return back()->withErrors([
+        'email' => 'The provided credentials do not match our records.',
+    ]);
+}
     // 4. Logout
     public function logout(Request $request)
     {

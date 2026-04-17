@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 // Add this line below to fix the red error:
 use App\Models\User; 
 
@@ -17,9 +18,8 @@ class Task extends Model
         'is_completed'
     ];
 
-    public function user()
+   public function user(): BelongsTo
     {
-        // Now User::class will be recognized
         return $this->belongsTo(User::class);
     }
 }

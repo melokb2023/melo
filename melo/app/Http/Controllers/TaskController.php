@@ -23,6 +23,7 @@ class TaskController extends Controller
             $tasks = Task::with('user')->latest()->get();
             return view('adminlist', compact('tasks'));
         }
+        
 
         // Regular User: Fetch only their own tasks
         $tasks = Task::where('user_id', $user->id)->latest()->get();
@@ -32,37 +33,70 @@ class TaskController extends Controller
     /**
      * Store a new task (Regular Users only).
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|max:255',
-            'priority' => 'required|in:low,medium,high',
-        ]);
 
-        Task::create([
-            'title' => $request->title,
-            'user_id' => Auth::id(),
-            'priority' => $request->priority,
-            'is_completed' => false,
-        ]);
 
-        return redirect()->back()->with('success', 'Task added successfully!');
+public function store(Request $request)
+{
+    // Validate the incoming data
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'category' => 'required|string',
+        'due_date' => 'nullable|date',
+        'priority' => 'required|in:low,medium,high',
+    ]);
+
+    // Create the task linked to the logged-in user
+    $task = Task::create([
+        'title' => $validated['title'],
+        'description' => $validated['description'],
+        'category' => $validated['category'],
+        'due_date' => $validated['due_date'],
+        'priority' => $validated['priority'],
+        'user_id' => auth()->id(),
+        'is_completed' => false,
+    ]);
+
+    return response()->json($task);
+}
+
+public function toggle(Task $task) {
+    $task->update(['is_completed' => !$task->is_completed]);
+    return response()->json(['success' => true]);
+}
+
+public function destroy(Task $task) {
+    $task->delete();
+    return response()->json(['success' => true]);
+}
+
+public function update(Request $request, \App\Models\Task $task)
+{
+    // Ensure the user owns this task
+    if ($task->user_id !== auth()->id()) {
+        return response()->json(['error' => 'Unauthorized'], 403);
     }
 
-    /**
-     * Update task status (Complete/Incomplete).
-     */
-    public function toggle(Task $task)
-    {
-        // Security check: Only the owner can toggle their task
-        if (Auth::id() !== $task->user_id) {
-            return redirect()->back()->with('error', 'Unauthorized action.');
-        }
+    $task->update([
+        'title'       => $request->title,
+        'description' => $request->description,
+        'category'    => $request->category,
+        'priority'    => $request->priority,
+        'due_date'    => $request->due_date,
+    ]);
 
-        $task->update([
-            'is_completed' => !$task->is_completed
-        ]);
-
-        return redirect()->back();
+    // Return the updated task so the JS can update the list without refreshing
+    return response()->json($task);
+}
+  public function index2() {
+    if (auth()->user()->role === 'admin') {
+        // We use 'with(user)' to prevent the app from slowing down
+        $tasks = Task::with('user')->latest()->get();
+        return view('adminlist', compact('tasks')); // Ensure this matches your filename
+    } else {
+        $tasks = Task::where('user_id', auth()->id())->latest()->get();
+        return view('tasklist', compact('tasks'));
     }
+}
+    
 }
