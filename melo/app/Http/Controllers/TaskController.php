@@ -51,13 +51,17 @@ public function toggle(Task $task) {
 
 public function destroy(Task $task)
 {
-    // RBAC Rule: Only the owner OR an admin can delete
-    if (auth()->user()->role !== 'admin' && $task->user_id !== auth()->id()) {
-        return response()->json(['error' => 'Unauthorised'], 403);
+    // RBAC: Only the owner OR an admin can delete
+    if ($task->user_id !== auth()->id() && auth()->user()->role !== 'admin') {
+        return response()->json(['error' => 'Unauthorized'], 403);
     }
 
     $task->delete();
-    return response()->json(['message' => 'Task deleted']);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Task deleted successfully'
+    ]);
 }
 
 
@@ -84,12 +88,12 @@ public function update(Request $request, Task $task)
    if (auth()->user()->role === 'admin') {
         // Admins see everything + the user who owns the task
         $tasks = Task::with('user')->get();
-        return view('admin', compact('tasks'));
+        return view('adminlist', compact('tasks'));
     }
  else{
     // Regular users only see their own tasks
     $tasks = Task::where('user_id', auth()->id())->get();
-    return view('tasks.index', compact('tasks'));
+    return view('tasklist', compact('tasks'));
  }
     
    

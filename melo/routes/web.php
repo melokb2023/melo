@@ -20,10 +20,8 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/tasks', [TaskController::class, 'index2']);
     Route::post('/tasks', [TaskController::class, 'store']);
-    
     // ADD THIS LINE FOR THE UPDATE BUTTON TO WORK
     Route::put('/tasks/{task}', [TaskController::class, 'update']); 
-    
     Route::patch('/tasks/{task}/toggle', [TaskController::class, 'toggle']);
-    Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
+    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 });

@@ -9,14 +9,15 @@ use App\Models\User;
 
 class Task extends Model
 {
-    protected $fillable = [
-        'title', 
-        'user_id', 
-        'priority', 
-        'category', 
-        'due_date', 
-        'is_completed'
-    ];
+  protected $fillable = [
+    'title', 
+    'description', 
+    'category', 
+    'due_date', 
+    'priority', 
+    'user_id', 
+    'is_completed'
+];
 
    public function user(): BelongsTo
     {

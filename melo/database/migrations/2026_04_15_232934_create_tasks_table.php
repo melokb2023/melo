@@ -10,20 +10,22 @@ return new class extends Migration
      * Run the migrations.
      */
    public function up(): void
-{
-    Schema::create('tasks', function (Blueprint $table) {
-        $table->id();
-        // This links the task to the 'id' on the 'users' table
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
-        $table->string('title');
-        $table->text('description')->nullable();
-        $table->enum('priority', ['low', 'medium', 'high'])->default('medium');
-        $table->string('category')->nullable();
-        $table->date('due_date')->nullable();
-        $table->boolean('is_completed')->default(false);
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('tasks', function (Blueprint $table) {
+            $table->id();
+            // This links the task to the 'id' on the 'users' table
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('title');
+            
+            // CHANGED: From text to string (VARCHAR 255)
+            $table->string('description', 500);
+            $table->enum('priority', ['low', 'medium', 'high'])->default('medium');
+            $table->string('category')->nullable();
+            $table->date('due_date')->nullable();
+            $table->boolean('is_completed')->default(false);
+            $table->timestamps();
+        });
+    }
     /**
      * Reverse the migrations.
      */

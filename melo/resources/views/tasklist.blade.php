@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Melo | My Tasks</title>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         :root {
             --bg-color: #f8fafc;
@@ -30,7 +28,7 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             margin: 0;
             line-height: 1.5;
             transition: all 0.3s ease;
@@ -90,6 +88,7 @@
             color: var(--text-color);
             box-sizing: border-box;
             font-size: 0.95rem;
+            outline-color: var(--primary-color);
         }
 
         .grid-inputs {
@@ -113,12 +112,11 @@
             justify-content: center;
             align-items: center;
             gap: 8px;
+            transition: opacity 0.2s;
         }
 
-        .btn-cancel {
-            background: #94a3b8;
-            margin-top: 0.5rem;
-        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-cancel { background: #94a3b8; margin-top: 0.5rem; }
 
         .task-list { list-style: none; padding: 0; }
 
@@ -128,12 +126,13 @@
             padding: 1.25rem;
             border-radius: 14px;
             border: 1px solid var(--border-color);
+            transition: transform 0.2s;
         }
 
         .task-main { display: flex; align-items: flex-start; gap: 16px; }
         .task-checkbox { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary-color); margin-top: 4px; }
-        .task-content { flex: 1; }
-        .task-title { font-weight: 600; font-size: 1.1rem; }
+        .task-content { flex: 1; min-width: 0; }
+        .task-title { font-weight: 600; font-size: 1.1rem; word-wrap: break-word; }
         .task-title.completed { text-decoration: line-through; opacity: 0.5; }
 
         .task-meta {
@@ -166,7 +165,18 @@
         .btn-icon.edit:hover { color: var(--primary-color); background: var(--accent-bg); }
         .btn-icon.delete:hover { color: #ef4444; background: #fee2e2; }
 
-        .task-desc { margin: 8px 0 0 36px; font-size: 0.9rem; color: var(--text-light); }
+        /* Updated styling for string descriptions */
+        .task-desc { 
+            margin: 10px 0 0 36px; 
+            font-size: 0.88rem; 
+            color: var(--text-light);
+            background: var(--accent-bg);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary-color);
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
@@ -210,7 +220,7 @@
             <input type="date" id="taskDate">
         </div>
 
-        <textarea id="taskDesc" placeholder="Any extra details..." rows="2" style="margin-top:1rem"></textarea>
+        <textarea id="taskDesc" placeholder="Brief description (max 255 chars)..." rows="2" style="margin-top:1rem"></textarea>
         
         <button id="addTaskBtn" class="btn-primary">
             <i class="fas fa-save"></i> <span id="btnText">Create New Task</span>
@@ -238,9 +248,9 @@
     const btnText = document.getElementById('btnText');
     const formTitle = document.getElementById('formTitle');
     
-    // Initialize Local Data
+    // 1. Safer JSON parsing
     window.meloData = {
-        tasks: JSON.parse(dataElement.getAttribute('data-tasks')),
+        tasks: JSON.parse(dataElement.getAttribute('data-tasks') || "[]"),
         csrf: dataElement.getAttribute('data-csrf'),
         editMode: false
     };
@@ -254,7 +264,7 @@
     function renderTasks() {
         taskList.innerHTML = '';
         window.meloData.tasks.forEach(task => {
-            const p = priorityMap[task.priority];
+            const p = priorityMap[task.priority] || priorityMap.medium;
             const li = document.createElement('li');
             li.className = 'task-item';
             li.innerHTML = `
@@ -266,7 +276,7 @@
                             <span class="badge-priority" style="background:${p.color}; color:${p.text}">
                                 <i class="fas fa-flag" style="font-size:0.7rem"></i> ${task.priority}
                             </span>
-                            <span><i class="fas fa-folder"></i> ${task.category}</span>
+                            <span><i class="fas fa-folder"></i> ${task.category || 'General'}</span>
                             ${task.due_date ? `<span><i class="fas fa-calendar-alt"></i> ${task.due_date}</span>` : ''}
                         </div>
                     </div>
@@ -275,14 +285,14 @@
                         <button class="btn-icon delete" onclick="deleteTask(${task.id})"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>
-                ${task.description ? `<p class="task-desc">${task.description}</p>` : ''}
+                ${task.description ? `<div class="task-desc">${task.description}</div>` : ''}
             `;
             taskList.append(li);
         });
         updateStats();
     }
 
-    // CREATE OR UPDATE SUBMISSION
+    // 2. Corrected Store/Update Logic
     addTaskBtn.addEventListener('click', async () => {
         const payload = {
             title: document.getElementById('taskInput').value,
@@ -297,7 +307,7 @@
         const isEdit = window.meloData.editMode;
         const id = document.getElementById('editTaskId').value;
         
-        // URL and Method logic
+        // FIXED: Using backticks for dynamic URL
         const url = isEdit ? `/tasks/${id}` : '/tasks';
         const method = isEdit ? 'PUT' : 'POST';
 
@@ -306,7 +316,7 @@
                 method: method,
                 headers: { 
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json', // Critical for Laravel JSON response
+                    'Accept': 'application/json', // Critical for Laravel validation responses
                     'X-CSRF-TOKEN': window.meloData.csrf 
                 },
                 body: JSON.stringify(payload)
@@ -314,42 +324,40 @@
 
             if (response.ok) {
                 const updatedTask = await response.json();
-                
                 if (isEdit) {
                     const idx = window.meloData.tasks.findIndex(t => t.id == id);
                     window.meloData.tasks[idx] = updatedTask;
                 } else {
                     window.meloData.tasks.unshift(updatedTask);
                 }
-                
                 resetForm();
                 renderTasks();
             } else {
-                alert("Server error. Please ensure your Controller returns response()->json($task)");
+                const errorData = await response.json();
+                console.error("Server validation error:", errorData);
+                alert("Error: " + (errorData.message || "Could not save task."));
             }
-        } catch (e) {
-            console.error(e);
+        } catch (e) { 
+            console.error("Network/Fetch error:", e); 
         }
     });
 
     window.prepareEdit = (id) => {
         const task = window.meloData.tasks.find(t => t.id == id);
-        
-        // Fill form
+        if(!task) return;
+
         document.getElementById('editTaskId').value = task.id;
         document.getElementById('taskInput').value = task.title;
         document.getElementById('taskDesc').value = task.description || '';
-        document.getElementById('taskCategory').value = task.category;
+        document.getElementById('taskCategory').value = task.category || 'General';
         document.getElementById('taskPriority').value = task.priority;
         document.getElementById('taskDate').value = task.due_date || '';
 
-        // Switch to Edit Mode UI
         window.meloData.editMode = true;
-        btnText.innerText = "Update Task Information";
+        btnText.innerText = "Update Task Details";
         cancelEditBtn.style.display = "block";
         formTitle.style.display = "block";
         creatorCard.classList.add('edit-mode');
-        
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -358,7 +366,6 @@
         document.getElementById('taskInput').value = '';
         document.getElementById('taskDesc').value = '';
         document.getElementById('taskDate').value = '';
-        
         window.meloData.editMode = false;
         btnText.innerText = "Create New Task";
         cancelEditBtn.style.display = "none";
@@ -369,23 +376,36 @@
     cancelEditBtn.addEventListener('click', resetForm);
 
     window.toggleTask = async (id) => {
-        await fetch(`/tasks/${id}/toggle`, {
-            method: 'PATCH',
-            headers: { 'X-CSRF-TOKEN': window.meloData.csrf }
-        });
         const task = window.meloData.tasks.find(t => t.id === id);
+        if(!task) return;
         task.is_completed = !task.is_completed;
         renderTasks();
+
+        try {
+            await fetch(`/tasks/${id}/toggle`, {
+                method: 'PATCH',
+                headers: { 
+                    'X-CSRF-TOKEN': window.meloData.csrf,
+                    'Accept': 'application/json'
+                }
+            });
+        } catch (e) { console.error("Error toggling task:", e); }
     };
 
     window.deleteTask = async (id) => {
         if (!confirm("Delete this task?")) return;
-        await fetch(`/tasks/${id}`, {
-            method: 'DELETE',
-            headers: { 'X-CSRF-TOKEN': window.meloData.csrf }
-        });
         window.meloData.tasks = window.meloData.tasks.filter(t => t.id !== id);
         renderTasks();
+
+        try {
+            await fetch(`/tasks/${id}`, {
+                method: 'DELETE',
+                headers: { 
+                    'X-CSRF-TOKEN': window.meloData.csrf,
+                    'Accept': 'application/json'
+                }
+            });
+        } catch (e) { console.error("Error deleting task:", e); }
     };
 
     function updateStats() {
@@ -393,6 +413,7 @@
         document.getElementById('completedTasks').innerText = window.meloData.tasks.filter(t => t.is_completed).length;
     }
 
+    // Theme Toggle
     document.getElementById('themeToggle').addEventListener('click', () => {
         const body = document.body;
         const isDark = body.getAttribute('data-theme') === 'dark';
@@ -402,6 +423,5 @@
 
     renderTasks();
 </script>
-
 </body>
 </html>
