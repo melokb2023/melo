@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 // --- Welcome Page ---
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 // --- Auth Routes ---
@@ -14,6 +14,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
+
 
 // --- Protected Routes ---
 Route::middleware(['auth'])->group(function () {

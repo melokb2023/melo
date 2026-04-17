@@ -143,6 +143,15 @@
             text-decoration: none;
             font-weight: 500;
         }
+
+        .admin-alert {
+            font-size: 0.75rem;
+            color: #6366f1;
+            margin-top: 8px;
+            display: block;
+            text-align: center;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -187,15 +196,19 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <select name="role" id="role" required>
-                            <option value="" disabled selected>Select Role</option>
-                            <option value="user">User</option>
-                            <option value="admin">Administrator</option>
-                        </select>
+                @if(!$adminExists)
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <select name="role" id="role" required>
+                                <option value="user" selected>User</option>
+                                <option value="admin">Administrator</option>
+                            </select>
+                        </div>
+                        <span class="admin-alert">You are the first user! You may claim Admin status.</span>
                     </div>
-                </div>
+                @else
+                    <input type="hidden" name="role" value="user">
+                @endif
 
                 <button type="submit" class="login-btn">Register Now</button>
             </form>

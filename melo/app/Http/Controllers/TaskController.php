@@ -12,23 +12,7 @@ class TaskController extends Controller
     /**
      * Display the task list based on role.
      */
-    public function index()
-    {
-        $user = Auth::user();
-
-        // Check the role defined in your melo_db users table
-        if ($user->role === 'admin') {
-            // Admin: Fetch ALL tasks from ALL users
-            // We use with('user') to get the owner's name without slowing down the DB
-            $tasks = Task::with('user')->latest()->get();
-            return view('adminlist', compact('tasks'));
-        }
-        
-
-        // Regular User: Fetch only their own tasks
-        $tasks = Task::where('user_id', $user->id)->latest()->get();
-        return view('tasklist', compact('tasks'));
-    }
+   
 
     /**
      * Store a new task (Regular Users only).
@@ -65,15 +49,23 @@ public function toggle(Task $task) {
     return response()->json(['success' => true]);
 }
 
-public function destroy(Task $task) {
+public function destroy(Task $task)
+{
+    // RBAC Rule: Only the owner OR an admin can delete
+    if (auth()->user()->role !== 'admin' && $task->user_id !== auth()->id()) {
+        return response()->json(['error' => 'Unauthorised'], 403);
+    }
+
     $task->delete();
-    return response()->json(['success' => true]);
+    return response()->json(['message' => 'Task deleted']);
 }
 
-public function update(Request $request, \App\Models\Task $task)
+
+public function update(Request $request, Task $task)
 {
-    // Ensure the user owns this task
-    if ($task->user_id !== auth()->id()) {
+    // RBAC logic: 
+    // DENY access only if the user is NOT the owner AND is NOT an admin.
+    if ($task->user_id !== auth()->id() && auth()->user()->role !== 'admin') {
         return response()->json(['error' => 'Unauthorized'], 403);
     }
 
@@ -85,18 +77,22 @@ public function update(Request $request, \App\Models\Task $task)
         'due_date'    => $request->due_date,
     ]);
 
-    // Return the updated task so the JS can update the list without refreshing
     return response()->json($task);
 }
-  public function index2() {
-    if (auth()->user()->role === 'admin') {
-        // We use 'with(user)' to prevent the app from slowing down
-        $tasks = Task::with('user')->latest()->get();
-        return view('adminlist', compact('tasks')); // Ensure this matches your filename
-    } else {
-        $tasks = Task::where('user_id', auth()->id())->latest()->get();
-        return view('tasklist', compact('tasks'));
+
+ public function index2() {
+   if (auth()->user()->role === 'admin') {
+        // Admins see everything + the user who owns the task
+        $tasks = Task::with('user')->get();
+        return view('admin', compact('tasks'));
     }
+ else{
+    // Regular users only see their own tasks
+    $tasks = Task::where('user_id', auth()->id())->get();
+    return view('tasks.index', compact('tasks'));
+ }
+    
+   
 }
     
 }
