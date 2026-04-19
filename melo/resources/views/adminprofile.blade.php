@@ -52,10 +52,8 @@
                         <div style="font-weight: 700;">{{ auth()->user()->name }}</div>
                         <div style="font-size: 0.8rem; color: var(--text-light);">{{ auth()->user()->email }}</div>
                     </div>
-                    <a href="/dashboard"><i class="fas fa-th-large"></i> Dashboard</a>
                     <a href="{{ route('adminprofile.edit') }}"><i class="fas fa-user"></i> Profile</a>
                     <a href="/settings/security"><i class="fas fa-lock"></i> Password & Security</a>
-                    <a href="/adjustments"><i class="fas fa-sliders-h"></i> Adjustments</a>
                     <div style="border-top: 1px solid var(--border-color); margin-top: 5px;">
                         <form action="/logout" method="POST">
                             @csrf
