@@ -30,8 +30,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     
     // GET: The Edit Page
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('adminprofile.edit');
-    
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('adminprofile.edit'); 
     // POST: The Update Action
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('adminprofile.update');
     // Standard User routes (edit2/update2)
@@ -50,3 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/settings/security', [ProfileController::class, 'editPassword2'])->name('user.password.edit');
     Route::put('/user/settings/security', [ProfileController::class, 'updatePassword2'])->name('user.password.update');
 });
+
+
+Route::get('/forgot-password', [ProfileController::class, 'showForgotPassword'])->name('password.request');
+Route::post('/password/update-direct', [ProfileController::class, 'updatePasswordDirect'])->name('password.update.direct');

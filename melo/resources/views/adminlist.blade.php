@@ -67,7 +67,7 @@
 <div class="app-container">
     <header class="app-header">
         <div class="header-content">
-            <h1>Melo<span style="color:var(--primary-color)">.</span> Admin</h1>
+            <h1>Admin System<span style="color:var(--primary-color)"></span></h1>
             <div style="display: flex; gap: 12px; align-items: center;">
                 <button id="themeToggle" class="theme-btn"><i class="fas fa-moon"></i></button>
                 
@@ -83,7 +83,7 @@
                             <div style="font-weight: 700; font-size: 0.95rem;">{{ auth()->user()->name }}</div>
                             <div style="font-size: 0.8rem; color: var(--text-light);">{{ auth()->user()->email }}</div>
                         </div>
-                        <a href="/profile"><i class="fas fa-user"></i> Edit Profiles</a>
+                        <a href="/profile"><i class="fas fa-user"></i> Profile</a>
                         <a href="/settings/security"><i class="fas fa-lock"></i> Change Password</a>
                         <div style="border-top: 1px solid var(--border-color); margin-top: 5px;">
                             <form action="/logout" method="POST" style="margin: 0;">

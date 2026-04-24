@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
 {
@@ -60,13 +61,26 @@ public function edit2()
     public function updatePassword(Request $request)
     {
         $request->validate([
-            'current_password' => ['required', 'current_password'], // Securely checks current password
-            'password' => ['required', 'confirmed'],                // Ensures password matches confirmation
-        ]);
+        // 1. Validates that current_password matches the actual database record
+        'current_password' => ['required', 'current_password'], 
+        
+        // 2. 'different:current_password' forces the new password to be unique
+        // 3. 'Password::min(8)' ensures security
+        'password' => [
+            'required', 
+            'confirmed', 
+            Password::min(8), 
+            'different:current_password'
+        ],
+    ], [
+        // Custom error message for the unique constraint
+        'password.different' => 'Your new password cannot be the same as your current password.',
+    ]);
 
-        $request->user()->update([
-            'password' => Hash::make($request->password),           // Hashes and saves the new password
-        ]);
+    // Update the authenticated user
+    $request->user()->update([
+        'password' => Hash::make($request->password),
+    ]);
 
         return back()->with('status', 'Password updated successfully!');
     }
@@ -78,14 +92,52 @@ public function editPassword2()
 public function updatePassword2(Request $request)
 {
     $request->validate([
-        'current_password' => ['required', 'current_password'],
-        'password' => ['required', 'confirmed'],
+        // 1. Validates that current_password matches the actual database record
+        'current_password' => ['required', 'current_password'], 
+        
+        // 2. 'different:current_password' forces the new password to be unique
+        // 3. 'Password::min(8)' ensures security
+        'password' => [
+            'required', 
+            'confirmed', 
+            Password::min(8), 
+            'different:current_password'
+        ],
+    ], [
+        // Custom error message for the unique constraint
+        'password.different' => 'Your new password cannot be the same as your current password.',
     ]);
 
+    // Update the authenticated user
     $request->user()->update([
         'password' => Hash::make($request->password),
     ]);
 
     return back()->with('status', 'Password updated successfully!');
 }
+
+public function showForgotPassword() 
+{
+    // Make sure 'forgotpassword' matches the name of your .blade.php file
+    return view('forgotpassword');
+}
+public function updatePasswordDirect(Request $request)
+    {
+        // 1. Validate: Email must exist, password must be confirmed
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|confirmed|min:8',
+        ], [
+            'email.exists' => 'No account found with this email.',
+        ]);
+
+        // 2. Find and Update
+        $user = User::where('email', $request->email)->first();
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        // 3. Success
+        return redirect('/login')->with('status', 'Password updated successfully.');
+    }
 }

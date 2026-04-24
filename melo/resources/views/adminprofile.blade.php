@@ -38,7 +38,7 @@
 
 <div class="app-container">
     <header class="header-content">
-        <h1>Profile<span style="color:var(--primary-color)">.</span> Management</h1>
+        <h1>Change Profile Name<span style="color:var(--primary-color)"></span></h1>
         <div style="display: flex; gap: 12px; align-items: center;">
             <button id="themeToggle" class="theme-btn"><i class="fas fa-moon"></i></button>
             <div class="user-menu-container">
@@ -53,7 +53,7 @@
                         <div style="font-size: 0.8rem; color: var(--text-light);">{{ auth()->user()->email }}</div>
                     </div>
                     <a href="{{ route('adminprofile.edit') }}"><i class="fas fa-user"></i> Profile</a>
-                    <a href="/settings/security"><i class="fas fa-lock"></i> Password & Security</a>
+                    <a href="/settings/security"><i class="fas fa-lock"></i> Change Password</a>
                     <div style="border-top: 1px solid var(--border-color); margin-top: 5px;">
                         <form action="/logout" method="POST">
                             @csrf

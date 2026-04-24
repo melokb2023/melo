@@ -29,7 +29,7 @@
 
 <div class="app-container">
     <header class="header-content">
-        <h1>User<span style="color:var(--primary-color)">.</span> Profile</h1>
+        <h1>Edit User Profile<span style="color:var(--primary-color)"></span></h1>
         <div class="user-menu-container">
             <div class="user-profile" id="userProfileBtn">
                 <span>{{ auth()->user()->name }}</span>
@@ -37,8 +37,8 @@
             </div>
             <div class="dropdown-menu" id="dropdownMenu">
                 <a href="/tasks"><i class="fas fa-tasks"></i> My Tasks</a>
-                <a href="{{ route('userprofile.edit2') }}"><i class="fas fa-user"></i> Profile</a>
-                <a href="user/settings/security"><i class="fas fa-lock"></i> Password & Security</a>
+                <a href="user/profile/update"><i class="fas fa-user"></i> Profile</a>
+                <a href="user/settings/security"><i class="fas fa-lock"></i> Change Password</a>
                 <div style="border-top: 1px solid var(--border-color);">
                     <form action="/logout" method="POST">
                         @csrf

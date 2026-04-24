@@ -110,19 +110,21 @@
             margin-top: 4px;
         }
 
-        .login-btn {
-            width: 100%;
-            background: #6366f1;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-bottom: 24px;
-        }
+        /* Update the button margin if needed */
+.login-btn {
+    width: 100%;
+    background: #6366f1;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 24px;
+    margin-top: 10px; /* Added slight top margin for balance */
+}
 
         .login-btn:hover {
             background: #4f46e5;
@@ -171,18 +173,13 @@
                         <input type="password" id="password" name="password" required placeholder=" ">
                         <label for="password">Password</label>
                     </div>
+                    <div style="margin-top: 8px; text-align: right;">
+            <a href="{{ route('password.request') }}" class="forgot-password" style="font-size: 0.8rem;">Forgot password?</a>
+        </div>
                     @error('password')
                         <span class="error-message">{{ $message }}</span>
                     @enderror
                 </div>
-
-                <div class="form-options">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                        <input type="checkbox" name="remember"> Remember me
-                    </label>
-                    <a href="#" class="forgot-password">Forgot password?</a>
-                </div>
-
                 <button type="submit" class="login-btn">Sign In</button>
             </form>
 

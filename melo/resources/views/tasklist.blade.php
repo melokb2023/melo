@@ -39,7 +39,7 @@
 
 <div class="app-container">
     <header class="header-content">
-        <h1>Melo<span style="color:var(--primary-color)">.</span></h1>
+        <h1>Simplified Advanced Task List System<span style="color:var(--primary-color)"></span></h1>
         <div style="display: flex; gap: 12px; align-items: center;">
             <button id="themeToggle" class="btn-icon"><i class="fas fa-moon"></i></button>
             <div class="user-menu-container">
@@ -271,6 +271,23 @@
         body.setAttribute('data-theme', isDark ? 'light' : 'dark');
         document.getElementById('themeToggle').innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
     });
+
+    // ADD THIS SECTION HERE
+    const userProfileBtn = document.getElementById('userProfileBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    userProfileBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); 
+        const isVisible = dropdownMenu.style.display === 'block';
+        dropdownMenu.style.display = isVisible ? 'none' : 'block';
+    });
+
+    window.addEventListener('click', (e) => {
+        if (!userProfileBtn.contains(e.target)) {
+            dropdownMenu.style.display = 'none';
+        }
+    });
+    // END OF ADDED SECTION
 
     renderTasks();
 </script>

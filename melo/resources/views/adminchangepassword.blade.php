@@ -38,7 +38,7 @@
 
 <div class="app-container">
     <header class="header-content">
-        <h1>Password<span style="color:var(--primary-color)">.</span> Security</h1>
+        <h1>Admin Management<span style="color:var(--primary-color)"></span></h1>
         <div style="display: flex; gap: 12px; align-items: center;">
             <button id="themeToggle" class="theme-btn"><i class="fas fa-moon"></i></button>
             <div class="user-menu-container">
@@ -53,7 +53,7 @@
                         <div style="font-size: 0.8rem; color: var(--text-light);">{{ auth()->user()->email }}</div>
                     </div>
                     <a href="{{ route('adminprofile.edit') }}"><i class="fas fa-user"></i> Profile</a>
-                    <a href="/settings/security"><i class="fas fa-lock"></i> Password & Security</a>
+                    <a href="/settings/security"><i class="fas fa-lock"></i> Change Password</a>
                     <div style="border-top: 1px solid var(--border-color); margin-top: 5px;">
                         <form action="/logout" method="POST">
                             @csrf
@@ -72,26 +72,36 @@
             @csrf
             @method('PUT')
 
+            @if ($errors->any())
+                <div style="background: #fee2e2; color: #b91c1c; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; border: 1px solid #fecaca;">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             @if (session('status'))
                 <div style="color: #22c55e; margin-bottom: 15px; font-weight: 600;">{{ session('status') }}</div>
             @endif
 
             <div class="form-group">
                 <label>Current Password</label>
-                <input type="password" name="current_password" required>
+                <input type="password" name="current_password" required autocomplete="current-password">
             </div>
             <div class="form-group">
                 <label>New Password</label>
-                <input type="password" name="password" required>
+                <input type="password" name="password" required autocomplete="new-password">
             </div>
             <div class="form-group">
                 <label>Confirm New Password</label>
-                <input type="password" name="password_confirmation" required>
+                <input type="password" name="password_confirmation" required autocomplete="new-password">
             </div>
             
             <div style="display: flex; gap: 10px; align-items: center;">
                 <button type="submit" class="save-btn">Update Password</button>
-                <a href="{{ route('adminprofile.edit') }}" class="back-btn">Back to Profile</a>
+                <a href="/tasks" class="back-btn">Back to Tasks</a>
             </div>
         </form>
     </main>
