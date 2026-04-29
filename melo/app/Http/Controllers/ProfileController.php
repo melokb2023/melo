@@ -113,7 +113,7 @@ public function updatePassword2(Request $request)
         'password' => Hash::make($request->password),
     ]);
 
-    return back()->with('status', 'Password updated successfully!');
+    return back()->with('status', 'Your password has been updated successfully!');
 }
 
 public function showForgotPassword() 
@@ -138,6 +138,6 @@ public function updatePasswordDirect(Request $request)
         ]);
 
         // 3. Success
-        return redirect('/login')->with('status', 'Password updated successfully.');
+        return redirect('/login')->with('status', 'Your password has been updated successfully.');
     }
 }

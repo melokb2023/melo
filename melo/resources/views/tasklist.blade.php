@@ -48,7 +48,7 @@
                     <span>{{ auth()->user()->name }}</span>
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="{{ route('userprofile.edit') }}"><i class="fas fa-user"></i> Profile</a>
+                    <a href="{{ route('userprofile.edit') }}"><i class="fas fa-user"></i> Edit User Profile</a>
                     <a href="/user/settings/security"><i class="fas fa-lock"></i> Password & Security</a>
                     <form action="/logout" method="POST">
                         @csrf

@@ -32,6 +32,7 @@
         .dropdown-menu { position: absolute; right: 0; top: 55px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 10px; box-shadow: var(--shadow); width: 220px; display: none; z-index: 100; }
         .dropdown-menu a { display: block; padding: 12px 15px; text-decoration: none; color: var(--text-color); font-size: 0.9rem; }
         .dropdown-menu a:hover { background: var(--bg-secondary); }
+        
     </style>
 </head>
 <body>
@@ -52,7 +53,7 @@
                         <div style="font-weight: 700;">{{ auth()->user()->name }}</div>
                         <div style="font-size: 0.8rem; color: var(--text-light);">{{ auth()->user()->email }}</div>
                     </div>
-                    <a href="{{ route('adminprofile.edit') }}"><i class="fas fa-user"></i> Profile</a>
+                    <a href="{{ route('adminprofile.edit') }}"><i class="fas fa-user"></i>Edit Admin Profile</a>
                     <a href="/settings/security"><i class="fas fa-lock"></i> Change Password</a>
                     <div style="border-top: 1px solid var(--border-color); margin-top: 5px;">
                         <form action="/logout" method="POST">

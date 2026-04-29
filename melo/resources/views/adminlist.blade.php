@@ -83,7 +83,7 @@
                             <div style="font-weight: 700; font-size: 0.95rem;">{{ auth()->user()->name }}</div>
                             <div style="font-size: 0.8rem; color: var(--text-light);">{{ auth()->user()->email }}</div>
                         </div>
-                        <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+                        <a href="/profile"><i class="fas fa-user"></i> Edit Admin Profile</a>
                         <a href="/settings/security"><i class="fas fa-lock"></i> Change Password</a>
                         <div style="border-top: 1px solid var(--border-color); margin-top: 5px;">
                             <form action="/logout" method="POST" style="margin: 0;">
@@ -111,7 +111,7 @@
     <main class="app-main">
         <div class="search-container">
             <i class="fas fa-search" style="color: var(--text-light)"></i>
-            <input type="text" id="adminSearch" placeholder="Search tasks or usernames...">
+            <input type="text" id="adminSearch" placeholder="Search Tasks or Usernames">
         </div>
 
         <div class="task-list-container">

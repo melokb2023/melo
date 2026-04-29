@@ -52,8 +52,7 @@
                         <div style="font-weight: 700;">{{ auth()->user()->name }}</div>
                         <div style="font-size: 0.8rem; color: var(--text-light);">{{ auth()->user()->email }}</div>
                     </div>
-                    <a href="/tasks"><i class="fas fa-th-large"></i> Tasks</a>
-                    <a href="/user/profile"><i class="fas fa-user"></i> Profile</a>
+                    <a href="/user/profile"><i class="fas fa-user"></i> Edit UserProfile</a>
                     <a href="/user/settings/security"><i class="fas fa-lock"></i> Change Password</a>
                     <div style="border-top: 1px solid var(--border-color); margin-top: 5px;">
                         <form action="/logout" method="POST">

@@ -20,6 +20,7 @@
         .back-btn { text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; color: var(--text-light); border: 1px solid var(--border-color); }
         .user-menu-container { position: relative; }
         .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 12px; border-radius: 25px; border: 1px solid var(--border-color); background: var(--bg-color); }
+         .avatar-placeholder { width: 32px; height: 32px; background-color: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 600; }
         .dropdown-menu { position: absolute; right: 0; top: 55px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 10px; box-shadow: var(--shadow); width: 220px; display: none; z-index: 100; }
         .dropdown-menu a { display: block; padding: 12px 15px; text-decoration: none; color: var(--text-color); font-size: 0.9rem; }
         .dropdown-menu a:hover { background: var(--bg-secondary); }
@@ -32,12 +33,12 @@
         <h1>Edit User Profile<span style="color:var(--primary-color)"></span></h1>
         <div class="user-menu-container">
             <div class="user-profile" id="userProfileBtn">
-                <span>{{ auth()->user()->name }}</span>
-                <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
-            </div>
+                    <div class="avatar-placeholder">{{ substr(auth()->user()->name, 0, 1) }}</div>
+                    <span>{{ auth()->user()->name }}</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem; color: var(--text-light);"></i>
+                </div>
             <div class="dropdown-menu" id="dropdownMenu">
-                <a href="/tasks"><i class="fas fa-tasks"></i> My Tasks</a>
-                <a href="user/profile/update"><i class="fas fa-user"></i> Profile</a>
+                <a href="user/profile/update"><i class="fas fa-user"></i>Edit User Profile</a>
                 <a href="user/settings/security"><i class="fas fa-lock"></i> Change Password</a>
                 <div style="border-top: 1px solid var(--border-color);">
                     <form action="/logout" method="POST">

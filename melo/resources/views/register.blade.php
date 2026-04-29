@@ -159,7 +159,7 @@
         <div class="login-card">
             <div class="login-header">
                 <h2>Create Account</h2>
-                <p>Enter your details to register for Melo</p>
+                <p>Enter details to enter this system.</p>
             </div>
             
             <form action="/register" method="POST">
