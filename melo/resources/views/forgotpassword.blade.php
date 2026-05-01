@@ -7,7 +7,30 @@
     <style>
         /* Unified Styles from your Registration UI */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; line-height: 1.6; color: #334155; }
+         body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    /* Changed to a modern, soft indigo/purple gradient */
+    background: #6366f1; 
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    line-height: 1.6;
+    color: #334155;
+}
+
+
+.input-wrapper input:focus + label,
+.input-wrapper input:not(:placeholder-shown) + label {
+    transform: translateY(-22px) scale(0.85);
+    color: #6366f1;
+    font-weight: 500;
+    background: white; 
+    padding: 0 4px;
+}
         .login-container { width: 100%; max-width: 400px; }
         .login-card { background: white; border-radius: 12px; padding: 32px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .login-header { text-align: center; margin-bottom: 32px; }
@@ -48,7 +71,7 @@
         <div class="login-card">
             <div class="login-header">
                 <h2 id="step-title">Reset Password</h2>
-                <p id="step-desc">Enter your account email to proceed</p>
+                <p id="step-desc">Please enter the following details.</p>
             </div>
             
            <form action="{{ route('password.update.direct') }}" method="POST">

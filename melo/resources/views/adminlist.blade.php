@@ -27,7 +27,32 @@
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         }
 
-        body { background-color: var(--bg-secondary); color: var(--text-color); font-family: 'Inter', sans-serif; margin: 0; transition: all 0.3s ease; }
+       body {
+    background-color: var(--bg-secondary);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    transition: all 0.3s ease;
+    
+    /* The Frame: Top, Bottom, and Sides */
+    border: 8px solid #6366f1; 
+    box-sizing: border-box;
+    min-height: 100vh;
+    
+    /* If you want that gradient look instead of solid purple */
+    border-image: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) 1;
+}
+
+/* Ensure the frame stays fixed while you scroll */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border: 8px solid transparent;
+    border-image: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) 1;
+    pointer-events: none; /* Allows you to click things 'under' the border */
+    z-index: 9999;
+}
         .app-container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
         .app-header { margin-bottom: 30px; }
         .header-content { display: flex; justify-content: space-between; align-items: center; }

@@ -12,17 +12,30 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #f8fafc;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            line-height: 1.6;
-            color: #334155;
-        }
+      body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    /* Changed to a modern, soft indigo/purple gradient */
+    background: #6366f1; 
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    line-height: 1.6;
+    color: #334155;
+}
+
+/* Update the floating label background to match the white card */
+.input-wrapper input:focus + label,
+.input-wrapper input:not(:placeholder-shown) + label {
+    transform: translateY(-22px) scale(0.85);
+    color: #6366f1;
+    font-weight: 500;
+    background: white; /* Keeps the label readable against the input border */
+    padding: 0 4px;
+}
 
         .login-container {
             width: 100%;
